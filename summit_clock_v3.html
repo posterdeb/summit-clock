@@ -4,11 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Summit — Clock</title>
+<script>
+(function(){
+  const saved = localStorage.getItem('summit_v3_theme');
+  const theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ── TOKENS ── */
 :root {
-  --white: #ffffff;
   --bg: #f7f7f6;
   --s1: #ffffff;
   --s2: #f2f2f0;
@@ -17,6 +23,9 @@
   --tx: #1a1a18;
   --tx2: #5a5a56;
   --tx3: #9a9a94;
+  --accent: #1a1a18;
+  --accent-text: #ffffff;
+  --accent-hover: #2d2d2a;
   --ontime: #2d6a4f;
   --ontime-bg: #edf7f2;
   --late: #b45309;
@@ -30,11 +39,24 @@
   --radius: 6px;
   --radius-lg: 10px;
 }
+:root[data-theme="dark"] {
+  --bg: #14141a;
+  --s1: #1c1c22;
+  --s2: #26262e;
+  --border: #2e2e38;
+  --border2: #3a3a46;
+  --tx: #f0f0ee;
+  --tx2: #b0b0b8;
+  --tx3: #74747e;
+  --accent: #f0f0ee;
+  --accent-text: #14141a;
+  --accent-hover: #d8d8d4;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif; font-size: 13px; min-height: 100vh; }
+body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif; font-size: 13px; min-height: 100vh; transition: background .15s, color .15s; }
 /* ── HEADER ── */
 .header {
-  background: var(--white);
+  background: var(--s1);
   border-bottom: 1px solid var(--border);
   padding: 0 28px;
   display: flex;
@@ -46,8 +68,8 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
   z-index: 100;
 }
 .logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.logo-mark { width: 26px; height: 26px; background: var(--tx); border-radius: 5px; display: flex; align-items: center; justify-content: center; }
-.logo-mark svg { width: 14px; height: 14px; fill: white; }
+.logo-mark { width: 26px; height: 26px; background: var(--accent); border-radius: 5px; display: flex; align-items: center; justify-content: center; }
+.logo-mark svg { width: 14px; height: 14px; fill: var(--accent-text); }
 .logo-name { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; }
 .logo-sub { font-size: 11px; color: var(--tx3); margin-left: 2px; }
 .divider-v { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
@@ -68,16 +90,30 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
   white-space: nowrap;
 }
 .mf-btn:hover { background: var(--s2); color: var(--tx); }
-.mf-btn.active { background: var(--tx); color: white; }
+.mf-btn.active { background: var(--accent); color: var(--accent-text); }
 /* Header right */
 .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.theme-toggle {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  background: var(--s1); color: var(--tx2);
+  cursor: pointer; transition: all .12s;
+}
+.theme-toggle:hover { border-color: var(--tx); color: var(--tx); }
+.theme-toggle svg { width: 14px; height: 14px; }
+.theme-toggle .icon-moon { display: block; }
+.theme-toggle .icon-sun { display: none; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
 .upload-btn {
   display: flex; align-items: center; gap: 5px;
   padding: 5px 12px;
   border: 1px solid var(--border2);
   border-radius: var(--radius);
   font-size: 11px; font-weight: 500; color: var(--tx2);
-  cursor: pointer; background: white;
+  cursor: pointer; background: var(--s1);
   transition: all .12s;
   font-family: 'Inter', sans-serif;
 }
@@ -90,7 +126,7 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 }
 .modal-overlay.open { display: flex; }
 .modal {
-  background: white; border-radius: var(--radius-lg);
+  background: var(--s1); border-radius: var(--radius-lg);
   width: 560px; max-width: 95vw; max-height: 80vh;
   display: flex; flex-direction: column;
   box-shadow: 0 8px 40px rgba(0,0,0,.18);
@@ -118,13 +154,13 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 }
 .modal-summary { font-size: 11px; color: var(--tx3); }
 .btn-primary {
-  padding: 6px 16px; background: var(--tx); color: white;
+  padding: 6px 16px; background: var(--accent); color: var(--accent-text);
   border: none; border-radius: var(--radius); font-size: 12px; font-weight: 500;
   cursor: pointer; font-family: 'Inter', sans-serif;
 }
-.btn-primary:hover { background: #2d2d2a; }
+.btn-primary:hover { background: var(--accent-hover); }
 .btn-secondary {
-  padding: 6px 14px; background: white; color: var(--tx2);
+  padding: 6px 14px; background: var(--s1); color: var(--tx2);
   border: 1px solid var(--border2); border-radius: var(--radius); font-size: 12px;
   cursor: pointer; font-family: 'Inter', sans-serif;
 }
@@ -134,7 +170,7 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 /* ── PARAMS BAR ── */
 .params-bar {
   display: flex; align-items: center; gap: 16px;
-  background: white; border: 1px solid var(--border);
+  background: var(--s1); border: 1px solid var(--border);
   border-radius: var(--radius-lg); padding: 10px 16px;
   margin-bottom: 16px; flex-wrap: wrap;
 }
@@ -150,7 +186,7 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 .params-note { font-size: 10px; color: var(--tx3); margin-left: auto; }
 /* ── EMPLOYEE TABLE ── */
 .table-card {
-  background: white; border: 1px solid var(--border);
+  background: var(--s1); border: 1px solid var(--border);
   border-radius: var(--radius-lg); overflow: hidden;
 }
 .table-header-row {
@@ -175,7 +211,7 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
   align-items: center;
 }
 .emp-row:hover { background: var(--bg); }
-.emp-row.selected { background: #f5f5f3; }
+.emp-row.selected { background: var(--s2); }
 .emp-name { font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 7px; }
 .emp-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 .emp-inactive .emp-name { color: var(--tx3); }
@@ -224,12 +260,12 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 .detail-close {
   font-size: 11px; color: var(--tx3); cursor: pointer;
   padding: 2px 8px; border: 1px solid var(--border);
-  border-radius: 4px; background: white;
+  border-radius: 4px; background: var(--s1);
   font-family: 'Inter', sans-serif;
 }
 .detail-close:hover { color: var(--tx); border-color: var(--tx); }
 /* LOG TABLE */
-.log-table { width: 100%; border-collapse: collapse; background: white; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+.log-table { width: 100%; border-collapse: collapse; background: var(--s1); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
 .log-table thead th {
   text-align: left; padding: 7px 12px;
   font-size: 10px; font-weight: 600; color: var(--tx3);
@@ -251,7 +287,7 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 /* NOTIFICATION */
 .notif {
   position: fixed; bottom: 20px; right: 20px;
-  background: var(--tx); color: white;
+  background: var(--accent); color: var(--accent-text);
   padding: 9px 16px; border-radius: var(--radius);
   font-size: 12px; display: none;
   box-shadow: 0 4px 20px rgba(0,0,0,.15);
@@ -267,7 +303,7 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
   display: flex; align-items: center; gap: 5px;
   padding: 3px 10px; border: 1px solid var(--border);
   border-radius: 20px; cursor: pointer; font-size: 11px;
-  background: white; color: var(--tx2); transition: all .12s;
+  background: var(--s1); color: var(--tx2); transition: all .12s;
   font-family: 'Inter', sans-serif;
 }
 .emp-toggle.inactive-t { background: var(--bg); color: var(--tx3); text-decoration: line-through; }
@@ -291,6 +327,10 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
   <div class="divider-v"></div>
   <div class="month-filters" id="monthFilters"></div>
   <div class="header-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark mode">
+      <svg class="icon-sun" viewBox="0 0 16 16" fill="currentColor"><path d="M8 4a4 4 0 100 8 4 4 0 000-8zM8 0a1 1 0 011 1v1a1 1 0 11-2 0V1a1 1 0 011-1zm0 13a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM16 8a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM3 8a1 1 0 01-1 1H1a1 1 0 110-2h1a1 1 0 011 1zm10.07-5.07a1 1 0 010 1.414l-.708.707a1 1 0 11-1.414-1.414l.707-.708a1 1 0 011.415 0zM4.05 11.95a1 1 0 010 1.414l-.707.707a1 1 0 11-1.415-1.414l.708-.708a1 1 0 011.414 0zm9.9 0a1 1 0 00-1.414 0l-.708.707a1 1 0 001.415 1.414l.707-.707a1 1 0 000-1.414zM4.05 4.05a1 1 0 00-1.414 0l-.708.708a1 1 0 001.414 1.414l.708-.707a1 1 0 000-1.415z"/></svg>
+      <svg class="icon-moon" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 0a7.5 7.5 0 109.79 9.79A7 7 0 016.5 0z"/></svg>
+    </button>
     <label class="upload-btn" title="Upload EcoTime CSV">
       <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L4 6h3v6h2V6h3L8 1zM2 13h12v2H2v-2z"/></svg>
       Upload CSV
@@ -1018,6 +1058,13 @@ function notify(msg) {
   const el=document.getElementById('notif');
   el.textContent=msg; el.style.display='block';
   setTimeout(()=>el.style.display='none',2500);
+}
+
+// ── THEME ─────────────────────────────────────────────────
+function toggleTheme() {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('summit_v3_theme', next);
 }
 
 init();
