@@ -311,6 +311,18 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 .emp-toggle .t-dot { width: 6px; height: 6px; border-radius: 50%; }
 /* Empty state */
 .empty { padding: 32px; text-align: center; color: var(--tx3); font-size: 12px; }
+/* Attendance chart */
+.chart-card-head { display: flex; align-items: baseline; justify-content: space-between; padding: 14px 16px 2px; gap: 12px; }
+.chart-title { font-size: 12px; font-weight: 600; color: var(--tx); }
+.chart-sub { font-size: 10px; color: var(--tx3); white-space: nowrap; }
+.att-chart { padding: 10px 16px 18px; display: flex; flex-direction: column; gap: 9px; }
+.att-bar-row { display: grid; grid-template-columns: 130px 1fr 44px; align-items: center; gap: 10px; }
+.att-bar-name { font-size: 11px; color: var(--tx2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+.att-bar-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.att-bar-track { background: var(--s2); border: 1px solid var(--border); border-radius: 999px; height: 15px; overflow: hidden; }
+.att-bar-fill { height: 100%; border-radius: 999px; min-width: 3px; transition: width .4s ease; }
+.att-bar-val { font-size: 11px; font-weight: 600; color: var(--tx); text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .att-bar-row { grid-template-columns: 92px 1fr 40px; } }
 </style>
 </head>
 <body>
@@ -378,6 +390,15 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
         <div class="toggle-group" id="toggleGroup"></div>
       </div>
     </div>
+  </div>
+
+  <!-- ATTENDANCE CHART -->
+  <div class="table-card" style="margin-top:16px;">
+    <div class="chart-card-head">
+      <div class="chart-title">Attendance by employee</div>
+      <div class="chart-sub" id="attChartSub"></div>
+    </div>
+    <div id="attChart" class="att-chart"></div>
   </div>
 
   <!-- NYSE HOLIDAYS -->
@@ -735,8 +756,37 @@ function periodLabel() {
 function renderAll() {
   renderKPIs();
   renderTable();
+  renderAttendanceChart();
   renderHolidaysTable();
   if (selectedEmp) renderDetail(selectedEmp);
+}
+
+// ── ATTENDANCE CHART ───────────────────────────────────────
+function renderAttendanceChart() {
+  const el = document.getElementById('attChart');
+  if (!el) return;
+  const all = [...new Set(RAW.map(r=>r.employee))].sort();
+  const list = showInactive ? all : all.filter(e=>activeStatus[e]);
+  const rows = list.map(e=>{
+    const days = filterRecords(e);
+    const s = days.length ? calcStats(days) : null;
+    return { e, pct: s ? s.attPct : null, col: COLORS[e]||'#888', inactive: !activeStatus[e] };
+  }).filter(r => r.pct !== null)
+    .sort((a,b)=> b.pct - a.pct);
+
+  const sub = document.getElementById('attChartSub');
+  if (sub) {
+    sub.textContent = rows.length
+      ? `${rows.length} employees · avg ${(rows.reduce((s,r)=>s+r.pct,0)/rows.length).toFixed(0)}%`
+      : '';
+  }
+
+  el.innerHTML = rows.length ? rows.map(r=>`
+    <div class="att-bar-row"${r.inactive?' style="opacity:.5"':''} title="${r.e}: ${r.pct.toFixed(0)}% attendance">
+      <div class="att-bar-name"><div class="att-bar-dot" style="background:${r.col}"></div>${r.e}</div>
+      <div class="att-bar-track"><div class="att-bar-fill" style="width:${Math.max(0,Math.min(100,r.pct)).toFixed(0)}%;background:${r.col}"></div></div>
+      <div class="att-bar-val">${r.pct.toFixed(0)}%</div>
+    </div>`).join('') : '<div class="empty">No data for this period.</div>';
 }
 
 // ── NYSE HOLIDAYS TABLE ─────────────────────────────────────
@@ -854,6 +904,7 @@ function toggleEmp(name) {
 function toggleShowInactive() {
   showInactive = !showInactive;
   renderTable();
+  renderAttendanceChart();
 }
 
 // ── DETAIL PANEL ──────────────────────────────────────────
