@@ -323,6 +323,58 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 .att-bar-fill { height: 100%; border-radius: 999px; min-width: 3px; transition: width .4s ease; }
 .att-bar-val { font-size: 11px; font-weight: 600; color: var(--tx); text-align: right; font-variant-numeric: tabular-nums; }
 @media (max-width: 560px) { .att-bar-row { grid-template-columns: 92px 1fr 40px; } }
+/* ── NAV TABS ── */
+.nav-tabs { display: flex; gap: 2px; }
+.nav-tab {
+  padding: 4px 14px; border-radius: 4px;
+  font-size: 12px; font-weight: 500; color: var(--tx2);
+  cursor: pointer; border: none; background: none;
+  transition: all .12s; font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+}
+.nav-tab:hover { background: var(--s2); color: var(--tx); }
+.nav-tab.active { background: var(--accent); color: var(--accent-text); }
+/* ── ANNUAL CALENDAR ── */
+.annual-cal-card {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px 18px 18px; margin-bottom: 14px;
+}
+.annual-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.annual-nav-left { display: flex; align-items: center; gap: 8px; }
+.annual-title { font-size: 13px; font-weight: 600; min-width: 38px; text-align: center; }
+.annual-nav-btn {
+  width: 22px; height: 22px; border-radius: var(--radius);
+  border: 1px solid var(--border2); background: var(--s1); color: var(--tx2);
+  cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
+  line-height: 1; transition: all .12s; font-family: 'Inter', sans-serif;
+}
+.annual-nav-btn:hover { border-color: var(--tx); color: var(--tx); }
+.annual-legend { display: flex; align-items: center; gap: 12px; }
+.annual-leg-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--tx2); }
+.annual-leg-dot { width: 8px; height: 8px; border-radius: 2px; }
+.annual-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.mini-cal {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 10px 10px 12px;
+}
+.mini-cal-title { font-size: 10px; font-weight: 600; color: var(--tx); text-align: center; margin-bottom: 7px; letter-spacing: .1px; }
+.mini-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+.mini-dow { font-size: 8px; font-weight: 600; color: var(--tx3); text-align: center; padding: 0 0 3px; }
+.mini-day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--tx2); border-radius: 3px;
+}
+.mini-day.today { background: var(--accent); color: var(--accent-text); font-weight: 700; }
+.mini-day.holiday { background: var(--late-bg); color: var(--late); font-weight: 600; }
+.mini-day.holiday.today { background: var(--late); color: #fff; }
+.mini-day.other-month { visibility: hidden; }
+.mini-day.weekend:not(.today):not(.holiday) { color: var(--tx3); }
+/* Compact holidays table */
+.holiday-table-compact .holiday-header-row,
+.holiday-table-compact .holiday-row { padding: 6px 14px; }
+.holiday-table-compact .holiday-row { font-size: 11px; }
+.cal-section { display: none; }
+.cal-section.active { display: block; }
 </style>
 </head>
 <body>
@@ -337,6 +389,11 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
     <span class="logo-sub">/ Clock</span>
   </div>
   <div class="divider-v"></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-clock" onclick="switchTab('clock')">Clock</button>
+    <button class="nav-tab" id="tab-calendar" onclick="switchTab('calendar')">Calendar</button>
+  </div>
+  <div class="divider-v" id="mf-divider"></div>
   <div class="month-filters" id="monthFilters"></div>
   <div class="header-right">
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark mode">
@@ -354,63 +411,89 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 <!-- MAIN -->
 <div class="main">
 
-  <!-- PARAMS -->
-  <div class="params-bar">
-    <div class="param-item">
-      <span class="param-label">Entry time</span>
-      <input class="param-input" id="p_entry" value="07:00" oninput="renderAll()">
-    </div>
-    <div class="param-item">
-      <span class="param-label">Tolerance</span>
-      <input class="param-input" id="p_tol" value="15" oninput="renderAll()" style="width:42px"> min
-    </div>
-    <div class="param-item">
-      <span class="param-label">Min hours/day</span>
-      <input class="param-input" id="p_minhrs" value="8" oninput="renderAll()" style="width:42px"> h
-    </div>
-    <span class="params-note">IN after 12 PM → treated as OUT · Duplicate IN → earliest kept</span>
-  </div>
+  <!-- SECTION: CLOCK -->
+  <div class="cal-section active" id="section-clock">
 
-  <!-- TABLE -->
-  <div class="table-card">
-    <div class="table-header-row">
-      <div class="th">Employee</div>
-      <div class="th">Attendance</div>
-      <div class="th">On Time</div>
-      <div class="th">Avg Arrival</div>
-      <div class="th">Avg Hours</div>
-      <div class="th">Absences</div>
-      <div class="th">Missing OUT</div>
+    <!-- PARAMS -->
+    <div class="params-bar">
+      <div class="param-item">
+        <span class="param-label">Entry time</span>
+        <input class="param-input" id="p_entry" value="07:00" oninput="renderAll()">
+      </div>
+      <div class="param-item">
+        <span class="param-label">Tolerance</span>
+        <input class="param-input" id="p_tol" value="15" oninput="renderAll()" style="width:42px"> min
+      </div>
+      <div class="param-item">
+        <span class="param-label">Min hours/day</span>
+        <input class="param-input" id="p_minhrs" value="8" oninput="renderAll()" style="width:42px"> h
+      </div>
+      <span class="params-note">IN after 12 PM → treated as OUT · Duplicate IN → earliest kept</span>
     </div>
-    <div id="empTableBody"></div>
-    <div class="inactive-toggle-row" id="toggleRow" style="display:none;">
-      <button class="btn-secondary" id="toggleRowBtn" onclick="toggleShowInactive()" style="font-size:11px;padding:3px 10px;">Show inactive</button>
-      <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--tx3);">
-        Per-employee:
-        <div class="toggle-group" id="toggleGroup"></div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header-row">
+        <div class="th">Employee</div>
+        <div class="th">Attendance</div>
+        <div class="th">On Time</div>
+        <div class="th">Avg Arrival</div>
+        <div class="th">Avg Hours</div>
+        <div class="th">Absences</div>
+        <div class="th">Missing OUT</div>
+      </div>
+      <div id="empTableBody"></div>
+      <div class="inactive-toggle-row" id="toggleRow" style="display:none;">
+        <button class="btn-secondary" id="toggleRowBtn" onclick="toggleShowInactive()" style="font-size:11px;padding:3px 10px;">Show inactive</button>
+        <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--tx3);">
+          Per-employee:
+          <div class="toggle-group" id="toggleGroup"></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ATTENDANCE CHART -->
-  <div class="table-card" style="margin-top:16px;">
-    <div class="chart-card-head">
-      <div class="chart-title">Attendance by employee</div>
-      <div class="chart-sub" id="attChartSub"></div>
+    <!-- ATTENDANCE CHART -->
+    <div class="table-card" style="margin-top:16px;">
+      <div class="chart-card-head">
+        <div class="chart-title">Attendance by employee</div>
+        <div class="chart-sub" id="attChartSub"></div>
+      </div>
+      <div id="attChart" class="att-chart"></div>
     </div>
-    <div id="attChart" class="att-chart"></div>
-  </div>
 
-  <!-- NYSE HOLIDAYS -->
-  <div class="table-card" style="margin-top:16px;">
-    <div class="holiday-header-row">
-      <div class="th">Date</div>
-      <div class="th">Day</div>
-      <div class="th">Holiday</div>
-      <div class="th">Status</div>
+  </div><!-- /section-clock -->
+
+  <!-- SECTION: CALENDAR -->
+  <div class="cal-section" id="section-calendar">
+
+    <!-- ANNUAL CALENDAR WIDGET -->
+    <div class="annual-cal-card">
+      <div class="annual-nav">
+        <div class="annual-nav-left">
+          <button class="annual-nav-btn" onclick="calMove(-1)">&#8249;</button>
+          <div class="annual-title" id="calYearTitle"></div>
+          <button class="annual-nav-btn" onclick="calMove(1)">&#8250;</button>
+        </div>
+        <div class="annual-legend">
+          <div class="annual-leg-item"><div class="annual-leg-dot" style="background:var(--accent)"></div>Today</div>
+          <div class="annual-leg-item"><div class="annual-leg-dot" style="background:var(--late-bg);border:1px solid var(--late)"></div>NYSE Holiday</div>
+        </div>
+      </div>
+      <div class="annual-grid" id="annualGrid"></div>
     </div>
-    <div id="holidaysTableBody"></div>
-  </div>
+
+    <!-- NYSE HOLIDAYS TABLE -->
+    <div class="table-card holiday-table-compact">
+      <div class="holiday-header-row">
+        <div class="th">Date</div>
+        <div class="th">Day</div>
+        <div class="th">Holiday</div>
+        <div class="th">Status</div>
+      </div>
+      <div id="holidaysTableBody"></div>
+    </div>
+
+  </div><!-- /section-calendar -->
 
 </div>
 
@@ -759,6 +842,74 @@ function renderAll() {
   renderAttendanceChart();
   renderHolidaysTable();
   if (selectedEmp) renderDetail(selectedEmp);
+}
+
+// ── TAB SWITCHING ──────────────────────────────────────────
+let activeTab = 'clock';
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('section-clock').classList.toggle('active', tab === 'clock');
+  document.getElementById('section-calendar').classList.toggle('active', tab === 'calendar');
+  document.getElementById('tab-clock').classList.toggle('active', tab === 'clock');
+  document.getElementById('tab-calendar').classList.toggle('active', tab === 'calendar');
+  const mfDivider = document.getElementById('mf-divider');
+  const mf = document.getElementById('monthFilters');
+  mfDivider.style.display = tab === 'clock' ? '' : 'none';
+  mf.style.display = tab === 'clock' ? '' : 'none';
+  if (tab === 'calendar') renderCalendar();
+}
+
+// ── ANNUAL CALENDAR ────────────────────────────────────────
+let calYear = new Date().getFullYear();
+const CAL_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function calMove(dir) {
+  calYear += dir;
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const titleEl = document.getElementById('calYearTitle');
+  const grid    = document.getElementById('annualGrid');
+  if (!titleEl || !grid) return;
+
+  titleEl.textContent = calYear;
+  const todayStr = new Date().toISOString().slice(0,10);
+  let html = '';
+
+  for (let m = 0; m < 12; m++) {
+    const firstDay    = new Date(calYear, m, 1).getDay();
+    const daysInMonth = new Date(calYear, m + 1, 0).getDate();
+    const mm = String(m + 1).padStart(2,'0');
+
+    let mHtml = `<div class="mini-cal"><div class="mini-cal-title">${CAL_MONTHS[m]}</div><div class="mini-cal-grid">`;
+    mHtml += 'SMTWTFS'.split('').map(c=>`<div class="mini-dow">${c}</div>`).join('');
+
+    for (let i = 0; i < firstDay; i++) mHtml += `<div class="mini-day other-month"></div>`;
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dd      = String(d).padStart(2,'0');
+      const dateStr = `${calYear}-${mm}-${dd}`;
+      const dow     = new Date(dateStr + 'T00:00:00').getDay();
+      const isToday   = dateStr === todayStr;
+      const isHoliday = HOLIDAYS.has(dateStr);
+      const isWeekend = dow === 0 || dow === 6;
+      let cls = 'mini-day';
+      if (isToday)        cls += ' today';
+      else if (isHoliday) cls += ' holiday';
+      else if (isWeekend) cls += ' weekend';
+      const tip = isHoliday ? ` title="${HOLIDAY_NAMES[dateStr]||'NYSE Holiday'}"` : '';
+      mHtml += `<div class="${cls}"${tip}>${d}</div>`;
+    }
+
+    const trailing = (7 - ((firstDay + daysInMonth) % 7)) % 7;
+    for (let i = 0; i < trailing; i++) mHtml += `<div class="mini-day other-month"></div>`;
+
+    mHtml += `</div></div>`;
+    html += mHtml;
+  }
+
+  grid.innerHTML = html;
 }
 
 // ── ATTENDANCE CHART ───────────────────────────────────────
