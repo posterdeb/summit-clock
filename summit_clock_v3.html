@@ -15,42 +15,42 @@
 <style>
 /* ── TOKENS ── */
 :root {
-  --bg: #f7f7f6;
+  --bg: #f0f4fb;
   --s1: #ffffff;
-  --s2: #f2f2f0;
-  --border: #e4e4e0;
-  --border2: #d0d0cc;
-  --tx: #1a1a18;
-  --tx2: #5a5a56;
-  --tx3: #9a9a94;
-  --accent: #1a1a18;
+  --s2: #e8eef8;
+  --border: #ccd8ec;
+  --border2: #b0c4de;
+  --tx: #0f1e3a;
+  --tx2: #3d5278;
+  --tx3: #7b92b8;
+  --accent: #1e3a6e;
   --accent-text: #ffffff;
-  --accent-hover: #2d2d2a;
-  --ontime: #2d6a4f;
-  --ontime-bg: #edf7f2;
+  --accent-hover: #2d4f8a;
+  --ontime: #1a6b4a;
+  --ontime-bg: #e6f4ee;
   --late: #b45309;
   --late-bg: #fef3e2;
-  --vlate: #9b1c1c;
+  --vlate: #991b1b;
   --vlate-bg: #fde8e8;
   --absent: #374151;
   --absent-bg: #f3f4f6;
-  --mout: #5b21b6;
-  --mout-bg: #ede9fe;
+  --mout: #4338ca;
+  --mout-bg: #eef2ff;
   --radius: 6px;
   --radius-lg: 10px;
 }
 :root[data-theme="dark"] {
-  --bg: #14141a;
-  --s1: #1c1c22;
-  --s2: #26262e;
-  --border: #2e2e38;
-  --border2: #3a3a46;
-  --tx: #f0f0ee;
-  --tx2: #b0b0b8;
-  --tx3: #74747e;
-  --accent: #f0f0ee;
-  --accent-text: #14141a;
-  --accent-hover: #d8d8d4;
+  --bg: #0d1626;
+  --s1: #131e35;
+  --s2: #1a2840;
+  --border: #233050;
+  --border2: #2e3d60;
+  --tx: #dce8ff;
+  --tx2: #8aaad4;
+  --tx3: #4d6899;
+  --accent: #4d8fcc;
+  --accent-text: #0d1626;
+  --accent-hover: #5fa3e0;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif; font-size: 13px; min-height: 100vh; transition: background .15s, color .15s; }
@@ -153,6 +153,18 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
   display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
 }
 .modal-summary { font-size: 11px; color: var(--tx3); }
+/* ── FILE HISTORY MODAL ── */
+.hist-list { display: flex; flex-direction: column; gap: 0; }
+.hist-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .12s; }
+.hist-item:last-child { border-bottom: none; }
+.hist-item:hover { background: var(--s2); }
+.hist-icon { width: 32px; height: 32px; border-radius: var(--radius); background: var(--s2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--tx3); }
+.hist-name { font-size: 12px; font-weight: 500; color: var(--tx); line-height: 1.3; }
+.hist-meta { font-size: 10px; color: var(--tx3); margin-top: 2px; }
+.hist-badge { margin-left: auto; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 10px; background: var(--s2); color: var(--tx3); border: 1px solid var(--border); white-space: nowrap; flex-shrink: 0; }
+.hist-del { margin-left: 6px; background: none; border: none; cursor: pointer; color: var(--tx3); font-size: 13px; padding: 3px 6px; border-radius: 3px; flex-shrink: 0; }
+.hist-del:hover { background: var(--vlate-bg); color: var(--vlate); }
+.hist-empty { padding: 32px 20px; text-align: center; font-size: 12px; color: var(--tx3); }
 .btn-primary {
   padding: 6px 16px; background: var(--accent); color: var(--accent-text);
   border: none; border-radius: var(--radius); font-size: 12px; font-weight: 500;
@@ -294,9 +306,9 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 }
 /* MANAGE TOGGLE */
 .inactive-toggle-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 16px; border-top: 1px solid var(--border);
-  font-size: 11px; color: var(--tx3); background: var(--bg);
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; border-top: 1px solid var(--border);
+  background: var(--s2);
 }
 .toggle-group { display: flex; gap: 8px; flex-wrap: wrap; }
 .emp-toggle {
@@ -309,6 +321,31 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 .emp-toggle.inactive-t { background: var(--bg); color: var(--tx3); text-decoration: line-through; }
 .emp-toggle:hover { border-color: var(--tx); }
 .emp-toggle .t-dot { width: 6px; height: 6px; border-radius: 50%; }
+/* Metric toggle */
+.metric-toggle-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--s2); }
+.metric-tabs { display: flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.metric-tab { padding: 5px 14px; font-size: 11px; font-weight: 500; cursor: pointer; border: none; background: var(--s1); color: var(--tx2); font-family: 'Inter', sans-serif; transition: all .12s; }
+.metric-tab.active { background: var(--accent); color: var(--accent-text); }
+/* Manage employees modal */
+.manage-emp-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-bottom: 1px solid var(--border); }
+.manage-emp-item:last-child { border-bottom: none; }
+.manage-emp-name { flex: 1; font-size: 12px; font-weight: 500; }
+.manage-emp-status { font-size: 10px; color: var(--tx3); margin-top: 1px; }
+.manage-emp-toggle { padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--s2); color: var(--tx2); font-family: 'Inter', sans-serif; transition: all .12s; }
+.manage-emp-toggle:hover { border-color: var(--tx); color: var(--tx); }
+.manage-emp-toggle.is-active { background: var(--ontime-bg); color: var(--ontime); border-color: var(--ontime); }
+/* Raw data edit */
+.log-table tbody tr { cursor: pointer; }
+.log-table tbody tr:hover td { background: var(--s2); }
+.edit-rec-modal { background: var(--s1); border-radius: var(--radius-lg); padding: 22px; width: 380px; max-width: 95vw; border: 1px solid var(--border); }
+.edit-rec-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--tx); }
+.edit-rec-sub { font-size: 11px; color: var(--tx3); margin-bottom: 16px; }
+.edit-rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.edit-rec-fg { display: flex; flex-direction: column; gap: 4px; }
+.edit-rec-fg label { font-size: 9px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--tx3); }
+.edit-rec-inp { padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--tx); background: var(--s2); outline: none; width: 100%; }
+.edit-rec-inp:focus { border-color: var(--accent); }
+.edit-rec-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
 /* Empty state */
 .empty { padding: 32px; text-align: center; color: var(--tx3); font-size: 12px; }
 /* Attendance chart */
@@ -375,6 +412,108 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 .holiday-table-compact .holiday-row { font-size: 11px; }
 .cal-section { display: none; }
 .cal-section.active { display: block; }
+
+/* ── BIRTHDAY CALENDAR ── */
+.bday-layout { display: grid; grid-template-columns: 272px 1fr; gap: 14px; margin-bottom: 14px; align-items: start; }
+.bday-panel { background: var(--s1); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; position: sticky; top: 66px; }
+.bday-panel-hdr { padding: 11px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.bday-panel-title { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--tx3); }
+.bday-panel-sub { font-size: 10px; color: var(--tx2); }
+.bday-upcoming-list { padding: 4px 0; max-height: calc(100vh - 210px); overflow-y: auto; }
+.bday-upcoming-item { display: flex; align-items: center; gap: 9px; padding: 8px 14px; transition: background .12s; cursor: default; }
+.bday-upcoming-item:hover { background: var(--s2); }
+.bday-upcoming-item.today-row { background: var(--late-bg); }
+.bday-av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; flex-shrink: 0; }
+.bday-av-inv { background: #dbeafe; color: #1d4ed8; }
+.bday-av-emp { background: var(--late-bg); color: var(--late); }
+.bday-name { font-size: 11px; font-weight: 500; line-height: 1.3; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.bday-date-lbl { font-size: 10px; color: var(--tx3); margin-top: 1px; }
+.bday-days-badge { margin-left: auto; font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; }
+.bday-badge-today { background: var(--late-bg); color: var(--late); }
+.bday-badge-soon { background: var(--late-bg); color: var(--late); opacity: .7; }
+.bday-badge-normal { background: var(--s2); color: var(--tx3); border: 1px solid var(--border); }
+.bday-empty { padding: 20px; text-align: center; font-size: 11px; color: var(--tx3); }
+/* Monthly birthday calendar */
+.bday-cal-card { background: var(--s1); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.bday-cal-hdr { padding: 11px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.bday-month-nav { display: flex; align-items: center; gap: 10px; }
+.bday-month-lbl { font-size: 13px; font-weight: 600; min-width: 160px; }
+.bday-nav-btn { width: 24px; height: 24px; border-radius: var(--radius); border: 1px solid var(--border2); background: var(--s1); color: var(--tx2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1; transition: all .12s; font-family: 'Inter', sans-serif; }
+.bday-nav-btn:hover { border-color: var(--tx); color: var(--tx); }
+.bday-filter-pills { display: flex; gap: 4px; }
+.bday-pill { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--s2); color: var(--tx2); font-family: 'Inter', sans-serif; transition: all .12s; }
+.bday-pill.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+.bday-cal-body { padding: 14px 16px 16px; }
+.bday-dow-hdr { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-bottom: 6px; }
+.bday-dow-lbl { text-align: center; font-size: 9px; font-weight: 600; color: var(--tx3); letter-spacing: .06em; text-transform: uppercase; padding: 2px 0; }
+.bday-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.bday-cell { border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 4px 2px 3px; cursor: default; transition: background .12s; min-height: 50px; }
+.bday-cell.has-bday { cursor: pointer; }
+.bday-cell.has-bday:hover { background: var(--late-bg); }
+.bday-cell.is-holiday { background: var(--late-bg); }
+.bday-cell.is-holiday.has-bday:hover { filter: brightness(.96); }
+.bday-cell.other-month .bday-num { opacity: .3; }
+.bday-cell.is-weekend:not(.is-holiday) .bday-num { color: var(--tx3); }
+.bday-num { font-size: 11px; font-weight: 400; color: var(--tx); line-height: 1; margin-bottom: 3px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.bday-cell.today-cell .bday-num { background: var(--accent); color: var(--accent-text); font-weight: 600; }
+.bday-dots { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; }
+.bday-dot { width: 5px; height: 5px; border-radius: 50%; }
+.bday-dot-inv { background: #1d4ed8; }
+.bday-dot-emp { background: var(--late); }
+.bday-holiday-lbl { font-size: 7px; color: var(--late); font-weight: 600; line-height: 1.2; text-align: center; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0 1px; margin-top: 1px; }
+.bday-legend { display: flex; gap: 12px; align-items: center; margin-top: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.bday-leg-item { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--tx3); }
+.bday-leg-dot { width: 6px; height: 6px; border-radius: 50%; }
+.bday-leg-sq { width: 8px; height: 8px; border-radius: 2px; background: var(--late-bg); border: 1px solid var(--late); }
+/* View toggle (Month/Year) */
+.bday-view-toggle { display: flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; flex-shrink: 0; }
+.bday-vtoggle { padding: 4px 12px; font-size: 10px; font-weight: 500; cursor: pointer; border: none; background: var(--s2); color: var(--tx2); font-family: 'Inter', sans-serif; transition: all .12s; }
+.bday-vtoggle.active { background: var(--accent); color: var(--accent-text); }
+/* Year view annual grid inside card */
+.bday-annual-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 16px; }
+.mini-day.has-bday-dot { position: relative; }
+.mini-day.has-bday-dot::after { content:''; position:absolute; bottom:1px; left:50%; transform:translateX(-50%); width:3px; height:3px; border-radius:50%; background: #1d4ed8; }
+/* Birthday table */
+.bday-tbl-card { background: var(--s1); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 14px; }
+.bday-tbl-hdr { padding: 11px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.bday-tbl-tabs { display: flex; gap: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.bday-tbl-tab { padding: 5px 14px; font-size: 11px; font-weight: 500; cursor: pointer; border: none; background: var(--s2); color: var(--tx2); font-family: 'Inter', sans-serif; transition: all .12s; }
+.bday-tbl-tab.active { background: var(--accent); color: var(--accent-text); }
+.bday-tbl-count { font-size: 11px; color: var(--tx3); }
+.bday-search { padding: 5px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 11px; font-family: 'Inter', sans-serif; color: var(--tx); background: var(--s2); outline: none; width: 140px; }
+.bday-search:focus { border-color: var(--border2); }
+.bday-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.bday-table th { padding: 7px 14px; text-align: left; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; color: var(--tx3); border-bottom: 1px solid var(--border); background: var(--s2); }
+.bday-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--tx); }
+.bday-table tr:last-child td { border-bottom: none; }
+.bday-table tr:hover td { background: var(--s2); }
+.bday-rm-btn { background: none; border: none; cursor: pointer; color: var(--tx3); font-size: 11px; padding: 2px 6px; border-radius: 3px; transition: all .12s; }
+.bday-rm-btn:hover { background: var(--vlate-bg); color: var(--vlate); }
+/* Pagination */
+.bday-pagination { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--border); }
+.bday-page-btn { width: 26px; height: 26px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--s2); color: var(--tx2); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all .12s; line-height: 1; }
+.bday-page-btn:hover:not(:disabled) { border-color: var(--tx); color: var(--tx); }
+.bday-page-btn:disabled { opacity: .3; cursor: default; }
+.bday-page-info { font-size: 11px; color: var(--tx3); }
+/* Birthday popover */
+.bday-popover { position: fixed; background: var(--s1); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 10px 12px; box-shadow: 0 8px 28px rgba(0,0,0,.18); z-index: 200; min-width: 170px; max-width: 240px; display: none; }
+.bday-popover.open { display: block; }
+.bday-pop-date { font-size: 9px; color: var(--tx3); text-transform: uppercase; letter-spacing: .09em; margin-bottom: 7px; font-weight: 600; }
+.bday-pop-item { display: flex; align-items: center; gap: 7px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.bday-pop-item:last-child { border-bottom: none; }
+.bday-pop-name { font-size: 11px; font-weight: 500; color: var(--tx); }
+.bday-pop-type { font-size: 10px; color: var(--tx3); }
+/* Birthday add modal */
+.bday-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.38); z-index: 300; align-items: center; justify-content: center; }
+.bday-overlay.open { display: flex; }
+.bday-modal { background: var(--s1); border-radius: var(--radius-lg); padding: 22px; width: 420px; max-width: 95vw; border: 1px solid var(--border); }
+.bday-modal-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--tx); }
+.bday-fr2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.bday-fg { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.bday-fg label { font-size: 9px; letter-spacing: .09em; text-transform: uppercase; font-weight: 600; color: var(--tx3); }
+.bday-inp { padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 11px; font-family: 'Inter', sans-serif; color: var(--tx); background: var(--s2); outline: none; width: 100%; }
+.bday-inp:focus { border-color: var(--border2); }
+.bday-modal-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
 </style>
 </head>
 <body>
@@ -400,11 +539,68 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
       <svg class="icon-sun" viewBox="0 0 16 16" fill="currentColor"><path d="M8 4a4 4 0 100 8 4 4 0 000-8zM8 0a1 1 0 011 1v1a1 1 0 11-2 0V1a1 1 0 011-1zm0 13a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM16 8a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM3 8a1 1 0 01-1 1H1a1 1 0 110-2h1a1 1 0 011 1zm10.07-5.07a1 1 0 010 1.414l-.708.707a1 1 0 11-1.414-1.414l.707-.708a1 1 0 011.415 0zM4.05 11.95a1 1 0 010 1.414l-.707.707a1 1 0 11-1.415-1.414l.708-.708a1 1 0 011.414 0zm9.9 0a1 1 0 00-1.414 0l-.708.707a1 1 0 001.415 1.414l.707-.707a1 1 0 000-1.414zM4.05 4.05a1 1 0 00-1.414 0l-.708.708a1 1 0 001.414 1.414l.708-.707a1 1 0 000-1.415z"/></svg>
       <svg class="icon-moon" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 0a7.5 7.5 0 109.79 9.79A7 7 0 016.5 0z"/></svg>
     </button>
+    <button class="upload-btn" onclick="openHistoryModal()" title="View uploaded files" style="cursor:pointer">
+      <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.5 3.5v4l3 1.5-.5 1-3.5-1.75V4.5h1z"/></svg>
+      History
+    </button>
     <label class="upload-btn" title="Upload EcoTime CSV">
       <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L4 6h3v6h2V6h3L8 1zM2 13h12v2H2v-2z"/></svg>
       Upload CSV
       <input type="file" accept=".csv" onchange="previewCSV(event)">
     </label>
+  </div>
+</div>
+
+<!-- EDIT RECORD MODAL -->
+<div class="modal-overlay" id="editRecModal">
+  <div class="edit-rec-modal">
+    <div class="edit-rec-title" id="editRecTitle">Edit Record</div>
+    <div class="edit-rec-sub" id="editRecSub"></div>
+    <div class="edit-rec-grid">
+      <div class="edit-rec-fg"><label>Time IN</label><input class="edit-rec-inp" id="editRecIn" placeholder="e.g. 07:15 AM"></div>
+      <div class="edit-rec-fg"><label>Time OUT</label><input class="edit-rec-inp" id="editRecOut" placeholder="e.g. 04:30 PM"></div>
+    </div>
+    <div class="edit-rec-foot">
+      <button class="btn-secondary" onclick="document.getElementById('editRecModal').classList.remove('open')">Cancel</button>
+      <button class="btn-primary" onclick="saveRecordEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- INACTIVE EMPLOYEES MODAL -->
+<div class="modal-overlay" id="inactiveModal">
+  <div class="modal" style="max-height:75vh;display:flex;flex-direction:column">
+    <div class="modal-header">
+      <div class="modal-title">Inactive Employees</div>
+      <button class="modal-close" onclick="document.getElementById('inactiveModal').classList.remove('open')">×</button>
+    </div>
+    <div class="modal-body" style="padding:0;overflow-y:auto;flex:1" id="inactiveModalBody"></div>
+  </div>
+</div>
+
+<!-- MANAGE EMPLOYEES MODAL -->
+<div class="modal-overlay" id="manageModal">
+  <div class="modal" style="max-height:80vh;display:flex;flex-direction:column">
+    <div class="modal-header">
+      <div class="modal-title">Manage Employees</div>
+      <button class="modal-close" onclick="document.getElementById('manageModal').classList.remove('open')">×</button>
+    </div>
+    <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;background:var(--s2)">
+      <input class="edit-rec-inp" id="newEmpName" placeholder="Full name" style="flex:1">
+      <button class="btn-primary" onclick="addManualEmployee()" style="white-space:nowrap">+ Add</button>
+    </div>
+    <div class="modal-body" style="padding:0;overflow-y:auto;flex:1" id="manageModalBody"></div>
+  </div>
+</div>
+
+<!-- FILE HISTORY MODAL -->
+<div class="modal-overlay" id="histModal">
+  <div class="modal" style="max-height:80vh;display:flex;flex-direction:column">
+    <div class="modal-header">
+      <div class="modal-title">Uploaded Files</div>
+      <button class="modal-close" onclick="document.getElementById('histModal').classList.remove('open')">×</button>
+    </div>
+    <div class="modal-body" style="padding:0;overflow-y:auto;flex:1" id="histModalBody"></div>
   </div>
 </div>
 
@@ -433,32 +629,20 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
 
     <!-- TABLE -->
     <div class="table-card">
-      <div class="table-header-row">
-        <div class="th">Employee</div>
-        <div class="th">Attendance</div>
-        <div class="th">On Time</div>
-        <div class="th">Avg Arrival</div>
-        <div class="th">Avg Hours</div>
-        <div class="th">Absences</div>
-        <div class="th">Missing OUT</div>
+      <div class="metric-toggle-bar">
+        <div class="metric-tabs">
+          <button class="metric-tab active" id="mtab-all" onclick="setMetric('all',this)">All</button>
+          <button class="metric-tab" id="mtab-attendance" onclick="setMetric('attendance',this)">Attendance</button>
+          <button class="metric-tab" id="mtab-arrival" onclick="setMetric('arrival',this)">Avg Arrival</button>
+          <button class="metric-tab" id="mtab-missing" onclick="setMetric('missing',this)">Missing Days</button>
+        </div>
+        <button class="btn-secondary" id="manageEmpBtn" onclick="openManageModal()" style="font-size:11px;padding:4px 12px;">Manage employees</button>
       </div>
+      <div class="table-header-row" id="empTableHeader"></div>
       <div id="empTableBody"></div>
       <div class="inactive-toggle-row" id="toggleRow" style="display:none;">
-        <button class="btn-secondary" id="toggleRowBtn" onclick="toggleShowInactive()" style="font-size:11px;padding:3px 10px;">Show inactive</button>
-        <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--tx3);">
-          Per-employee:
-          <div class="toggle-group" id="toggleGroup"></div>
-        </div>
+        <button class="btn-secondary" id="toggleRowBtn" onclick="openInactiveModal()" style="font-size:11px;padding:3px 10px;"></button>
       </div>
-    </div>
-
-    <!-- ATTENDANCE CHART -->
-    <div class="table-card" style="margin-top:16px;">
-      <div class="chart-card-head">
-        <div class="chart-title">Attendance by employee</div>
-        <div class="chart-sub" id="attChartSub"></div>
-      </div>
-      <div id="attChart" class="att-chart"></div>
     </div>
 
   </div><!-- /section-clock -->
@@ -466,34 +650,126 @@ body { background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif
   <!-- SECTION: CALENDAR -->
   <div class="cal-section" id="section-calendar">
 
-    <!-- ANNUAL CALENDAR WIDGET -->
-    <div class="annual-cal-card">
-      <div class="annual-nav">
-        <div class="annual-nav-left">
-          <button class="annual-nav-btn" onclick="calMove(-1)">&#8249;</button>
-          <div class="annual-title" id="calYearTitle"></div>
-          <button class="annual-nav-btn" onclick="calMove(1)">&#8250;</button>
+    <!-- TOP: Upcoming + Calendar (Month or Year) -->
+    <div class="bday-layout">
+
+      <!-- LEFT: Upcoming birthdays -->
+      <div class="bday-panel">
+        <div class="bday-panel-hdr">
+          <div class="bday-panel-title">Upcoming</div>
+          <div class="bday-panel-sub">Next 30 days</div>
         </div>
-        <div class="annual-legend">
-          <div class="annual-leg-item"><div class="annual-leg-dot" style="background:var(--accent)"></div>Today</div>
-          <div class="annual-leg-item"><div class="annual-leg-dot" style="background:var(--late-bg);border:1px solid var(--late)"></div>NYSE Holiday</div>
+        <div class="bday-upcoming-list" id="bdayUpcomingList"></div>
+      </div>
+
+      <!-- RIGHT: Calendar with Month/Year toggle -->
+      <div class="bday-cal-card">
+        <div class="bday-cal-hdr">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="bday-view-toggle">
+              <button class="bday-vtoggle active" id="vtoggleMonth" onclick="setCalView('month')">Month</button>
+              <button class="bday-vtoggle" id="vtoggleYear" onclick="setCalView('year')">Year</button>
+            </div>
+            <div class="bday-month-nav" id="bdayMonthNavWrap">
+              <button class="bday-nav-btn" onclick="changeBdayMonth(-1)">&#8249;</button>
+              <div class="bday-month-lbl" id="bdayMonthLbl"></div>
+              <button class="bday-nav-btn" onclick="changeBdayMonth(1)">&#8250;</button>
+            </div>
+            <div class="bday-month-nav" id="bdayYearNavWrap" style="display:none">
+              <button class="bday-nav-btn" onclick="changeBdayYear(-1)">&#8249;</button>
+              <div class="bday-month-lbl" id="bdayYearLbl"></div>
+              <button class="bday-nav-btn" onclick="changeBdayYear(1)">&#8250;</button>
+            </div>
+          </div>
+          <div class="bday-filter-pills" id="bdayFilterWrap">
+            <button class="bday-pill active" onclick="setBdayFilter('all',this)">All</button>
+            <button class="bday-pill" onclick="setBdayFilter('Inversionista',this)">Investors</button>
+            <button class="bday-pill" onclick="setBdayFilter('Empleado',this)">Employees</button>
+          </div>
+        </div>
+
+        <!-- MONTH VIEW -->
+        <div id="bdayMonthView">
+          <div class="bday-cal-body">
+            <div class="bday-dow-hdr">
+              <div class="bday-dow-lbl">Sun</div><div class="bday-dow-lbl">Mon</div>
+              <div class="bday-dow-lbl">Tue</div><div class="bday-dow-lbl">Wed</div>
+              <div class="bday-dow-lbl">Thu</div><div class="bday-dow-lbl">Fri</div>
+              <div class="bday-dow-lbl">Sat</div>
+            </div>
+            <div class="bday-grid" id="bdayGrid"></div>
+            <div class="bday-legend">
+              <div class="bday-leg-item"><div class="bday-leg-dot" style="background:#1d4ed8"></div>Investor</div>
+              <div class="bday-leg-item"><div class="bday-leg-dot" style="background:var(--late)"></div>Employee</div>
+              <div class="bday-leg-item"><div class="bday-leg-sq"></div>NYSE Holiday</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- YEAR VIEW -->
+        <div id="bdayYearView" style="display:none">
+          <div class="bday-annual-grid" id="bdayAnnualGrid"></div>
+          <div class="bday-legend" style="padding:0 16px 14px">
+            <div class="bday-leg-item"><div class="bday-leg-dot" style="background:#1d4ed8"></div>Birthday</div>
+            <div class="bday-leg-item"><div class="bday-leg-sq"></div>NYSE Holiday</div>
+          </div>
         </div>
       </div>
-      <div class="annual-grid" id="annualGrid"></div>
     </div>
 
-    <!-- NYSE HOLIDAYS TABLE -->
-    <div class="table-card holiday-table-compact">
-      <div class="holiday-header-row">
-        <div class="th">Date</div>
-        <div class="th">Day</div>
-        <div class="th">Holiday</div>
-        <div class="th">Status</div>
+    <!-- UNIFIED TABLE -->
+    <div class="bday-tbl-card">
+      <div class="bday-tbl-hdr">
+        <div class="bday-tbl-tabs">
+          <button class="bday-tbl-tab active" id="tblTabBdays" onclick="setTblView('birthdays',this)">Birthdays</button>
+          <button class="bday-tbl-tab" id="tblTabHolidays" onclick="setTblView('holidays',this)">NYSE Holidays</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input type="text" class="bday-search" id="bdaySearch" placeholder="Search..." oninput="onBdaySearch()">
+          <span class="bday-tbl-count" id="bdayTblCount"></span>
+          <button id="bdayAddBtn" style="font-size:10px;padding:5px 12px;border-radius:var(--radius);border:none;cursor:pointer;font-family:'Inter',sans-serif;background:var(--accent);color:var(--accent-text);font-weight:500" onclick="document.getElementById('bdayAddModal').classList.add('open')">+ Add</button>
+        </div>
       </div>
-      <div id="holidaysTableBody"></div>
+      <div id="bdayTblWrap">
+        <table class="bday-table" id="bdayBdayTable">
+          <thead><tr><th>Name</th><th>Type</th><th>Birthday</th><th>Age</th><th>Days until</th><th></th></tr></thead>
+          <tbody id="bdayTblBody"></tbody>
+        </table>
+        <table class="bday-table" id="bdayHolidayTable" style="display:none">
+          <thead><tr><th>Date</th><th>Day</th><th>Holiday</th><th>Status</th></tr></thead>
+          <tbody id="bdayHolBody"></tbody>
+        </table>
+      </div>
+      <div class="bday-pagination">
+        <button class="bday-page-btn" id="bdayPrevBtn" onclick="bdayPagePrev()">&#8249;</button>
+        <span class="bday-page-info" id="bdayPageInfo"></span>
+        <button class="bday-page-btn" id="bdayNextBtn" onclick="bdayPageNext()">&#8250;</button>
+      </div>
     </div>
 
   </div><!-- /section-calendar -->
+
+  <!-- BIRTHDAY ADD MODAL -->
+  <div class="bday-overlay" id="bdayAddModal">
+    <div class="bday-modal">
+      <div class="bday-modal-title">Add Birthday</div>
+      <div class="bday-fr2">
+        <div class="bday-fg"><label>Full name</label><input type="text" class="bday-inp" id="bdayName" placeholder="First Last"></div>
+        <div class="bday-fg"><label>Date of birth</label><input type="date" class="bday-inp" id="bdayDOB"></div>
+      </div>
+      <div class="bday-fr2">
+        <div class="bday-fg"><label>Type</label><select class="bday-inp" id="bdayType"><option value="Inversionista">Investor</option><option value="Empleado">Employee</option></select></div>
+        <div class="bday-fg"><label>Email (optional)</label><input type="email" class="bday-inp" id="bdayEmail"></div>
+      </div>
+      <div class="bday-modal-foot">
+        <button class="btn-secondary" onclick="document.getElementById('bdayAddModal').classList.remove('open')">Cancel</button>
+        <button class="btn-primary" onclick="addBday()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BIRTHDAY POPOVER -->
+  <div class="bday-popover" id="bdayPopover"></div>
 
 </div>
 
@@ -594,6 +870,29 @@ const COLORS = {
 // ── STATE ─────────────────────────────────────────────────
 const DEFAULT_INACTIVE = new Set(['Frank Rojas','Maria Jose Romo']);
 let activeStatus = {};
+
+// ── MANUAL EMPLOYEES ───────────────────────────────────────
+const MANUAL_EMP_KEY = 'summit_manual_employees';
+const COLOR_PALETTE = ['#3b5bdb','#099268','#e67700','#c2255c','#7048e8','#0c8599','#6741d9','#2f9e44','#d9480f','#a61e4d','#1971c2','#5c7a2d'];
+
+function loadManualEmployees() {
+  try { return JSON.parse(localStorage.getItem(MANUAL_EMP_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveManualEmployees(list) {
+  localStorage.setItem(MANUAL_EMP_KEY, JSON.stringify(list));
+}
+function getAllEmployees() {
+  const fromRaw = [...new Set(RAW.map(r => r.employee))];
+  const manual = loadManualEmployees().map(m => m.name);
+  return [...new Set([...fromRaw, ...manual])].sort();
+}
+function getNextColor() {
+  const used = new Set(Object.values(COLORS));
+  const manual = loadManualEmployees();
+  manual.forEach(m => { if (m.color) used.add(m.color); });
+  return COLOR_PALETTE.find(c => !used.has(c)) || COLOR_PALETTE[manual.length % COLOR_PALETTE.length];
+}
 let selectedEmp = null;
 let selectedMonth = 'ytd';
 
@@ -734,10 +1033,16 @@ function dayStatus(r) {
 // ── INIT ──────────────────────────────────────────────────
 function init() {
   buildClean();
+  // Apply manual employee colors
+  loadManualEmployees().forEach(m => { if (!COLORS[m.name]) COLORS[m.name] = m.color; });
   const saved = localStorage.getItem('summit_v3_active');
-  const all = [...new Set(RAW.map(r=>r.employee))].sort();
-  if (saved) activeStatus = JSON.parse(saved);
-  else all.forEach(e => activeStatus[e] = !DEFAULT_INACTIVE.has(e));
+  const all = getAllEmployees();
+  if (saved) {
+    activeStatus = JSON.parse(saved);
+    all.forEach(e => { if (!(e in activeStatus)) activeStatus[e] = true; });
+  } else {
+    all.forEach(e => activeStatus[e] = !DEFAULT_INACTIVE.has(e));
+  }
   buildMonthFilters();
   renderAll();
 }
@@ -839,7 +1144,6 @@ function periodLabel() {
 function renderAll() {
   renderKPIs();
   renderTable();
-  renderAttendanceChart();
   renderHolidaysTable();
   if (selectedEmp) renderDetail(selectedEmp);
 }
@@ -856,7 +1160,7 @@ function switchTab(tab) {
   const mf = document.getElementById('monthFilters');
   mfDivider.style.display = tab === 'clock' ? '' : 'none';
   mf.style.display = tab === 'clock' ? '' : 'none';
-  if (tab === 'calendar') renderCalendar();
+  if (tab === 'calendar') { renderCalendar(); renderBdayAll(); }
 }
 
 // ── ANNUAL CALENDAR ────────────────────────────────────────
@@ -916,7 +1220,7 @@ function renderCalendar() {
 function renderAttendanceChart() {
   const el = document.getElementById('attChart');
   if (!el) return;
-  const all = [...new Set(RAW.map(r=>r.employee))].sort();
+  const all = getAllEmployees();
   const list = showInactive ? all : all.filter(e=>activeStatus[e]);
   const rows = list.map(e=>{
     const days = filterRecords(e);
@@ -970,78 +1274,178 @@ function renderHolidaysTable() {
 function renderKPIs() { /* removed */ }
 
 // ── EMPLOYEE TABLE ─────────────────────────────────────────
-let showInactive = false;
+let activeMetric = 'all'; // 'all' | 'attendance' | 'arrival' | 'missing'
+
+const mpill = (v, cls) => v ? `<span class="pill ${cls}">${v}</span>` : '<span style="color:var(--tx3);font-size:11px;">0</span>';
+
+const METRIC_DEFS = {
+  all: {
+    cols: '1fr 90px 80px 100px 80px 80px 90px',
+    headers: ['Employee', 'Attendance', 'On Time', 'Avg Arrival', 'Avg Hours', 'Absences', 'Missing OUT'],
+    row: (e, s) => `
+      <div class="emp-name">${e}</div>
+      <div class="cell">${s ? s.attPct.toFixed(0)+'%' : '—'}</div>
+      <div class="cell">${s && s.arrivals>0 ? s.ontimePct.toFixed(0)+'%' : '—'}</div>
+      <div class="cell" style="font-family:'JetBrains Mono',monospace;font-size:12px">${s ? minToStr(s.avgArr) : '—'}</div>
+      <div class="cell">${s && s.avgHrs>0 ? s.avgHrs.toFixed(1)+'h' : '—'}</div>
+      <div class="cell">${s ? mpill(s.absent>0?s.absent+'d':null,'pill-grey') : '—'}</div>
+      <div class="cell">${s ? mpill(s.mout>0?s.mout:null,'pill-purple') : '—'}</div>`
+  },
+  attendance: {
+    cols: '1fr 140px',
+    headers: ['Employee', 'Attendance'],
+    row: (e, s) => `
+      <div class="emp-name">${e}</div>
+      <div class="cell" style="font-size:15px;font-weight:600;color:var(--tx)">${s ? s.attPct.toFixed(0)+'%' : '—'}</div>`
+  },
+  arrival: {
+    cols: '1fr 140px',
+    headers: ['Employee', 'Avg Arrival'],
+    row: (e, s) => `
+      <div class="emp-name">${e}</div>
+      <div class="cell" style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--tx)">${s ? minToStr(s.avgArr) : '—'}</div>`
+  },
+  missing: {
+    cols: '1fr 120px 120px',
+    headers: ['Employee', 'Absences', 'Missing OUT'],
+    row: (e, s) => `
+      <div class="emp-name">${e}</div>
+      <div class="cell">${s ? mpill(s.absent>0?s.absent+'d':null,'pill-grey') : '—'}</div>
+      <div class="cell">${s ? mpill(s.mout>0?s.mout:null,'pill-purple') : '—'}</div>`
+  }
+};
+
+function setMetric(metric, el) {
+  activeMetric = metric;
+  document.querySelectorAll('.metric-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderTable();
+}
 
 function renderTable() {
-  const all = [...new Set(RAW.map(r=>r.employee))].sort();
+  const all = getAllEmployees();
   const active = all.filter(e=>activeStatus[e]);
   const inactive = all.filter(e=>!activeStatus[e]);
   const body = document.getElementById('empTableBody');
-  let html = '';
+  const header = document.getElementById('empTableHeader');
+  const def = METRIC_DEFS[activeMetric];
 
-  // Active employees always shown
+  // Render header with dynamic cols
+  if (header) {
+    header.style.gridTemplateColumns = def.cols;
+    header.innerHTML = def.headers.map(h=>`<div class="th">${h}</div>`).join('');
+  }
+
+  let html = '';
   active.forEach(e=>{
     const days = filterRecords(e);
     const s = days.length ? calcStats(days) : null;
-    const col = COLORS[e]||'#888';
     const isSelected = selectedEmp===e;
     html += `<div class="emp-row-wrap" id="wrap_${e.replace(/ /g,'_')}">
-      <div class="emp-row ${isSelected?'selected':''}" onclick="toggleDetail('${e}')">
-        <div class="emp-name"><div class="emp-dot" style="background:${col}"></div>${e}</div>
-        <div class="cell">${s ? s.attPct.toFixed(0)+'%' : '<span style="color:var(--tx3)">—</span>'}</div>
-        <div class="cell">${s && s.arrivals>0 ? s.ontimePct.toFixed(0)+'%' : '—'}</div>
-        <div class="cell">${s ? minToStr(s.avgArr) : '—'}</div>
-        <div class="cell">${s && s.avgHrs>0 ? s.avgHrs.toFixed(1)+'h' : '—'}</div>
-        <div>${s && s.absent>0 ? `<span class="pill pill-grey">${s.absent}d</span>` : (s?'<span style="color:var(--tx3);font-size:11px;">0</span>':'—')}</div>
-        <div>${s && s.mout>0 ? `<span class="pill pill-purple">${s.mout}</span>` : (s?'<span style="color:var(--tx3);font-size:11px;">0</span>':'—')}</div>
+      <div class="emp-row ${isSelected?'selected':''}" style="grid-template-columns:${def.cols}" onclick="toggleDetail('${e}')">
+        ${def.row(e, s)}
       </div>
       <div class="detail-panel ${isSelected?'open':''}" id="detail_${e.replace(/ /g,'_')}"></div>
     </div>`;
   });
 
-  // Inactive employees: shown only if showInactive=true
-  if (inactive.length > 0) {
-    if (showInactive) {
-      inactive.forEach(e=>{
-        const days = filterRecords(e);
-        const s = days.length ? calcStats(days) : null;
-        const col = COLORS[e]||'#888';
-        html += `<div class="emp-row-wrap" id="wrap_${e.replace(/ /g,'_')}" style="opacity:.45;">
-          <div class="emp-row emp-inactive" onclick="toggleDetail('${e}')">
-            <div class="emp-name"><div class="emp-dot" style="background:${col}"></div>${e} <span style="font-size:10px;color:var(--tx3);font-weight:400;">inactive</span></div>
-            <div class="cell">${s ? s.attPct.toFixed(0)+'%' : '—'}</div>
-            <div class="cell">${s && s.arrivals>0 ? s.ontimePct.toFixed(0)+'%' : '—'}</div>
-            <div class="cell">${s ? minToStr(s.avgArr) : '—'}</div>
-            <div class="cell">${s && s.avgHrs>0 ? s.avgHrs.toFixed(1)+'h' : '—'}</div>
-            <div>${s && s.absent>0 ? `<span class="pill pill-grey">${s.absent}d</span>` : (s?'<span style="color:var(--tx3);font-size:11px;">0</span>':'—')}</div>
-            <div>${s && s.mout>0 ? `<span class="pill pill-purple">${s.mout}</span>` : (s?'<span style="color:var(--tx3);font-size:11px;">0</span>':'—')}</div>
-          </div>
-          <div class="detail-panel ${selectedEmp===e?'open':''}" id="detail_${e.replace(/ /g,'_')}"></div>
-        </div>`;
-      });
-    }
-  }
-
   body.innerHTML = html || '<div class="empty">No data for this period.</div>';
 
-  // Toggle row at bottom
   const toggleRow = document.getElementById('toggleRow');
   if (inactive.length > 0) {
     toggleRow.style.display = 'flex';
-    document.getElementById('toggleRowBtn').textContent = showInactive
-      ? `Hide inactive (${inactive.length})`
-      : `Show inactive (${inactive.length})`;
+    document.getElementById('toggleRowBtn').textContent = `${inactive.length} inactive employee${inactive.length>1?'s':''}`;
   } else {
     toggleRow.style.display = 'none';
   }
 
-  // Per-employee hide/show buttons
-  document.getElementById('toggleGroup').innerHTML = all.map(e=>`
-    <button class="emp-toggle ${!activeStatus[e]?'inactive-t':''}" onclick="toggleEmp('${e}')">
-      <div class="t-dot" style="background:${COLORS[e]||'#888'}"></div>${e.split(' ')[0]}
-    </button>`).join('');
-
   if (selectedEmp) renderDetail(selectedEmp);
+}
+
+function openInactiveModal() {
+  const all = getAllEmployees();
+  const inactive = all.filter(e=>!activeStatus[e]);
+  const body = document.getElementById('inactiveModalBody');
+  if (!body) return;
+  if (!inactive.length) {
+    body.innerHTML = '<div style="padding:24px;text-align:center;font-size:12px;color:var(--tx3)">No inactive employees.</div>';
+  } else {
+    body.innerHTML = inactive.map(e => {
+      const days = filterRecords(e);
+      const s = days.length ? calcStats(days) : null;
+      const col = COLORS[e]||'#888';
+      return `<div class="manage-emp-item">
+        <div class="emp-dot" style="background:${col};width:8px;height:8px;border-radius:50%;flex-shrink:0"></div>
+        <div style="flex:1">
+          <div class="manage-emp-name">${e}</div>
+          <div class="manage-emp-status">${s ? `Att. ${s.attPct.toFixed(0)}% · ${s.absent}d absent` : 'No data'}</div>
+        </div>
+        <button class="manage-emp-toggle" onclick="toggleEmp('${e}');renderInactiveModal()">Set Active</button>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('inactiveModal').classList.add('open');
+}
+
+function renderInactiveModal() {
+  openInactiveModal();
+}
+
+function addManualEmployee() {
+  const inp = document.getElementById('newEmpName');
+  const name = inp.value.trim();
+  if (!name) return;
+  const all = getAllEmployees();
+  if (all.includes(name)) { notify('Employee already exists'); return; }
+  const color = getNextColor();
+  const manual = loadManualEmployees();
+  manual.push({ name, color });
+  saveManualEmployees(manual);
+  COLORS[name] = color;
+  activeStatus[name] = true;
+  saveActive();
+  inp.value = '';
+  renderManageModal();
+  renderAll();
+  notify(`${name} added`);
+}
+
+function removeManualEmployee(name) {
+  if (!confirm(`Remove ${name}? This only removes them if they have no CSV records.`)) return;
+  const manual = loadManualEmployees().filter(m => m.name !== name);
+  saveManualEmployees(manual);
+  delete activeStatus[name];
+  saveActive();
+  renderManageModal();
+  renderAll();
+  notify(`${name} removed`);
+}
+
+function openManageModal() {
+  renderManageModal();
+  document.getElementById('manageModal').classList.add('open');
+}
+
+function renderManageModal() {
+  const all = getAllEmployees();
+  const manual = new Set(loadManualEmployees().map(m => m.name));
+  const fromCsv = new Set(RAW.map(r => r.employee));
+  const body = document.getElementById('manageModalBody');
+  if (!body) return;
+  body.innerHTML = all.map(e => {
+    const isActive = !!activeStatus[e];
+    const isManualOnly = manual.has(e) && !fromCsv.has(e);
+    return `<div class="manage-emp-item">
+      <div style="flex:1">
+        <div class="manage-emp-name">${e}</div>
+        <div class="manage-emp-status">${isActive ? 'Active' : 'Inactive'}${isManualOnly ? ' · manually added' : ''}</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="manage-emp-toggle ${isActive?'is-active':''}" onclick="toggleEmp('${e}');renderManageModal()">${isActive ? 'Active' : 'Set Active'}</button>
+        ${isManualOnly ? `<button class="manage-emp-toggle" style="color:var(--vlate);border-color:var(--vlate)" onclick="removeManualEmployee('${e}')">Remove</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function toggleEmp(name) {
@@ -1049,14 +1453,14 @@ function toggleEmp(name) {
   if (!activeStatus[name] && selectedEmp===name) selectedEmp=null;
   saveActive();
   renderAll();
-  notify(`${name.split(' ')[0]} ${activeStatus[name]?'active':'hidden'}`);
 }
 
-function toggleShowInactive() {
-  showInactive = !showInactive;
-  renderTable();
-  renderAttendanceChart();
-}
+document.getElementById('inactiveModal')?.addEventListener('click', e => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
+document.getElementById('manageModal')?.addEventListener('click', e => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
 
 // ── DETAIL PANEL ──────────────────────────────────────────
 function toggleDetail(emp) {
@@ -1112,7 +1516,8 @@ function renderDetail(emp) {
       const diff = r.time_in_min - p.entryMin;
       lateBy = `<span style="color:${diff>60?'var(--vlate)':'var(--late)'};font-size:10px;">+${diff}min</span>`;
     }
-    return `<tr>
+    const editable = !r._isHoliday;
+    return `<tr ${editable?`onclick="openRecordEdit('${emp}','${r.date}')" title="Click to edit"`:'style="cursor:default"'}>
       <td class="mono">${r.date}</td>
       <td style="color:var(--tx3);font-size:10px;">${r.day}</td>
       <td class="mono">${tiStr} ${lateBy}</td>
@@ -1127,7 +1532,6 @@ function renderDetail(emp) {
   panel.innerHTML = `
     <div class="detail-header">
       <div style="display:flex;align-items:center;gap:8px;">
-        <div style="width:8px;height:8px;border-radius:50%;background:${COLORS[emp]||'#888'};"></div>
         <span class="detail-name">${emp}</span>
         <span style="font-size:10px;color:var(--tx3);">${s.present} days present · ${s.absent} absent · ${s.mout} missing OUT · avg ${minToStr(s.avgArr)} · ${s.avgHrs.toFixed(1)}h/day</span>
       </div>
@@ -1146,9 +1550,148 @@ function renderDetail(emp) {
     </table>`;
 }
 
+// ── RECORD EDITING ─────────────────────────────────────────
+let editingEmp = null, editingDate = null;
+
+function openRecordEdit(emp, date) {
+  editingEmp = emp;
+  editingDate = date;
+  const rec = RAW.find(r => r.employee === emp && r.date === date);
+  document.getElementById('editRecTitle').textContent = emp;
+  document.getElementById('editRecSub').textContent = date;
+  document.getElementById('editRecIn').value  = rec ? (rec.time_in  || '') : '';
+  document.getElementById('editRecOut').value = rec ? (rec.time_out || '') : '';
+  document.getElementById('editRecModal').classList.add('open');
+}
+
+function saveRecordEdit() {
+  const timeIn  = document.getElementById('editRecIn').value.trim();
+  const timeOut = document.getElementById('editRecOut').value.trim();
+  const rec = RAW.find(r => r.employee === editingEmp && r.date === editingDate);
+  if (rec) {
+    rec.time_in  = timeIn;
+    rec.time_out = timeOut;
+    // Recalculate work_hours if both times present
+    if (timeIn && timeOut) {
+      const toMin = t => {
+        const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+        if (!m) return null;
+        let h = parseInt(m[1]), mn = parseInt(m[2]);
+        const ampm = (m[3]||'').toUpperCase();
+        if (ampm === 'PM' && h !== 12) h += 12;
+        if (ampm === 'AM' && h === 12) h = 0;
+        return h * 60 + mn;
+      };
+      const inM = toMin(timeIn), outM = toMin(timeOut);
+      if (inM !== null && outM !== null && outM > inM) rec.work_hours = (outM - inM) / 60;
+    }
+    rec.missing_out = !!(timeIn && !timeOut);
+    rec.missing_in  = false;
+  }
+  document.getElementById('editRecModal').classList.remove('open');
+  buildClean();
+  renderAll();
+  if (editingEmp) renderDetail(editingEmp);
+  notify('Record updated');
+}
+
+document.getElementById('editRecModal')?.addEventListener('click', e => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
+
+// ── FILE HISTORY ───────────────────────────────────────────
+const HIST_KEY = 'summit_csv_history';
+const HIST_MAX = 20;
+
+function loadCSVHistory() {
+  try { return JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function saveCSVToHistory(filename, records, rawCSV) {
+  const history = loadCSVHistory();
+  const dates = records.map(r=>r.date).sort();
+  const employees = [...new Set(records.map(r=>r.employee))].sort();
+  const entry = {
+    id: Date.now(),
+    filename,
+    uploadedAt: new Date().toISOString(),
+    recordsAdded: records.filter(r=>r.isNew).length,
+    totalRecords: records.length,
+    employees,
+    dateFrom: dates[0] || '',
+    dateTo: dates[dates.length-1] || '',
+    rawCSV,
+  };
+  history.unshift(entry);
+  if (history.length > HIST_MAX) history.length = HIST_MAX;
+  localStorage.setItem(HIST_KEY, JSON.stringify(history));
+}
+
+function openHistoryModal() {
+  renderHistoryModal();
+  document.getElementById('histModal').classList.add('open');
+}
+
+function renderHistoryModal() {
+  const history = loadCSVHistory();
+  const body = document.getElementById('histModalBody');
+  if (!body) return;
+  if (!history.length) {
+    body.innerHTML = '<div class="hist-empty">No files uploaded yet. Import a CSV to get started.</div>';
+    return;
+  }
+  body.innerHTML = '<div class="hist-list">' + history.map(entry => {
+    const dt = new Date(entry.uploadedAt);
+    const dateStr = dt.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+    const timeStr = dt.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+    const range = entry.dateFrom && entry.dateTo
+      ? `${entry.dateFrom} → ${entry.dateTo}`
+      : 'unknown range';
+    const empList = entry.employees.slice(0,3).join(', ') + (entry.employees.length > 3 ? ` +${entry.employees.length-3}` : '');
+    return `<div class="hist-item" onclick="viewHistoryFile(${entry.id})">
+      <div class="hist-icon" title="Download CSV">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12L3 7h3V1h4v6h3L8 12zM2 13h12v2H2v-2z"/></svg>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div class="hist-name">${entry.filename}</div>
+        <div class="hist-meta">${dateStr} at ${timeStr} · ${range}</div>
+        <div class="hist-meta" style="margin-top:1px">${empList}</div>
+      </div>
+      <span class="hist-badge">+${entry.recordsAdded} records</span>
+      <button class="hist-del" title="Remove from history" onclick="deleteHistoryFile(event, ${entry.id})">✕</button>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function viewHistoryFile(id) {
+  const history = loadCSVHistory();
+  const entry = history.find(e => e.id === id);
+  if (!entry || !entry.rawCSV) return;
+  const blob = new Blob([entry.rawCSV], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = entry.filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function deleteHistoryFile(e, id) {
+  e.stopPropagation();
+  const history = loadCSVHistory().filter(en => en.id !== id);
+  localStorage.setItem(HIST_KEY, JSON.stringify(history));
+  renderHistoryModal();
+}
+
+document.getElementById('histModal')?.addEventListener('click', e => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
+
 // ── CSV UPLOAD & PREVIEW ────────────────────────────────────
 let pendingCSVRecords = [];
 let pendingCSVFile = '';
+let pendingRawCSV = '';
 
 function parseCSVRecords(text) {
   // Returns [{employee, date, day, time_in, time_out, work_hours, missing_out, isNew}]
@@ -1181,15 +1724,17 @@ function previewCSV(event) {
   event.target.value = '';
   const reader = new FileReader();
   reader.onload = e => {
-    const records = parseCSVRecords(e.target.result);
+    const rawCSV = e.target.result;
+    const records = parseCSVRecords(rawCSV);
     pendingCSVRecords = records;
     pendingCSVFile = file.name;
-    showPreviewModal(records, file.name);
+    pendingRawCSV = rawCSV;
+    showPreviewModal(records, file.name, false);
   };
   reader.readAsText(file);
 }
 
-function showPreviewModal(records, filename) {
+function showPreviewModal(records, filename, readOnly = false) {
   const newRecs = records.filter(r=>r.isNew);
   const dupRecs = records.filter(r=>!r.isNew);
   // Group by employee
@@ -1229,6 +1774,8 @@ function showPreviewModal(records, filename) {
   });
   document.getElementById('modalBody').innerHTML = body;
   document.getElementById('modalSummary').textContent = `${newRecs.length} new records · ${dupRecs.length} duplicates skipped`;
+  const importBtn = document.querySelector('#csvModal .btn-primary');
+  if (importBtn) importBtn.style.display = readOnly ? 'none' : '';
   document.getElementById('csvModal').classList.add('open');
 }
 
@@ -1248,6 +1795,7 @@ function confirmUpload() {
     if (!activeStatus.hasOwnProperty(r.employee)) activeStatus[r.employee]=true;
     existing.add(key); added++;
   });
+  saveCSVToHistory(pendingCSVFile, pendingCSVRecords, pendingRawCSV);
   closeModal();
   buildClean();
   buildMonthFilters();
@@ -1261,6 +1809,444 @@ function notify(msg) {
   el.textContent=msg; el.style.display='block';
   setTimeout(()=>el.style.display='none',2500);
 }
+
+// ── BIRTHDAY CALENDAR ──────────────────────────────────────
+const BDAY_TODAY = new Date();
+BDAY_TODAY.setHours(0,0,0,0);
+let bdayCalY = BDAY_TODAY.getFullYear();
+let bdayCalM = BDAY_TODAY.getMonth();
+let bdayFilter = 'all';
+let bdayCalView = 'month';   // 'month' | 'year'
+let bdayTblView = 'birthdays'; // 'birthdays' | 'holidays'
+let bdayPage = 0;
+const BDAY_PAGE_SIZE = 10;
+
+let BDAYS = [
+  {name:'Alberto Doniga Lara',dob:'1985-04-23',type:'Inversionista'},
+  {name:'Alejandra Barrios Gomez',dob:'1962-04-19',type:'Inversionista'},
+  {name:'Alejandro Espinosa Rivera',dob:'1999-09-24',type:'Inversionista'},
+  {name:'Ana Maria Lopez',dob:'1970-07-29',type:'Inversionista'},
+  {name:'Andres Ollivier',dob:'1995-01-09',type:'Inversionista'},
+  {name:'Celine Boutier',dob:'1993-11-10',type:'Inversionista'},
+  {name:'Christopher Freimund',dob:'1992-10-01',type:'Inversionista'},
+  {name:'Daniel Tobon Camelo',dob:'1985-01-26',type:'Inversionista'},
+  {name:'Daniel Uruñuela Lopez',dob:'1992-10-20',type:'Inversionista'},
+  {name:'Daniel Álvarez',dob:'2002-12-01',type:'Empleado'},
+  {name:'Daniela Rivera-Torres',dob:'1991-04-03',type:'Inversionista'},
+  {name:'Deborah Posternak',dob:'2002-08-15',type:'Empleado'},
+  {name:'Diego Vargas Rivero',dob:'1983-04-29',type:'Inversionista'},
+  {name:'Eduardo Torres Marcellan',dob:'1986-03-07',type:'Inversionista'},
+  {name:'Erick Nasser Nehme',dob:'1989-04-04',type:'Inversionista'},
+  {name:'Ernesto Vargas Guajardo',dob:'1955-08-20',type:'Inversionista'},
+  {name:'Esteban P Gonzalez Beckmann',dob:'2000-05-19',type:'Inversionista'},
+  {name:'Gabino Fraga Jesterhoudt',dob:'1996-11-16',type:'Inversionista'},
+  {name:'Gazi Nacif Borge',dob:'1944-12-28',type:'Inversionista'},
+  {name:'Gerardo Nasser Nehme',dob:'1986-04-23',type:'Inversionista'},
+  {name:'Griselda O Cadiz Salazar',dob:'1955-02-13',type:'Inversionista'},
+  {name:'Guillermo Manzur Juan',dob:'1982-07-19',type:'Inversionista'},
+  {name:'Horacio Morales Reyes',dob:'1974-07-19',type:'Inversionista'},
+  {name:'Héctor Miranda',dob:'2000-09-03',type:'Empleado'},
+  {name:'Jacobo Levy Chayo',dob:'1969-09-25',type:'Inversionista'},
+  {name:'Javier Amescua Lopez',dob:'1996-08-10',type:'Inversionista'},
+  {name:'Jorge Alberto Lopez Perera',dob:'1965-05-14',type:'Inversionista'},
+  {name:'Jose Antonio Juan Chelala',dob:'2002-08-15',type:'Inversionista'},
+  {name:'Jose Antonio Manzur Juan',dob:'1994-05-19',type:'Inversionista'},
+  {name:'Jose Patricio Manzur Juan',dob:'1993-01-10',type:'Inversionista'},
+  {name:'Juan Pablo Alverde Gonzalez',dob:'1982-04-02',type:'Inversionista'},
+  {name:'Luis Catan',dob:'1995-06-06',type:'Empleado'},
+  {name:"Luis Rodrigo Martinez O'Cadiz",dob:'1983-08-25',type:'Inversionista'},
+  {name:'Marco Antonio Fraiha Haddad',dob:'1971-03-31',type:'Inversionista'},
+  {name:'Maria Fernanda Lira Solis',dob:'1995-04-07',type:'Inversionista'},
+  {name:'Maria Gabriela Lopez Butron',dob:'1993-11-09',type:'Inversionista'},
+  {name:'Mariana Rivera-Torres',dob:'1993-08-23',type:'Inversionista'},
+  {name:'Miguel Angel Osorio',dob:'1996-06-15',type:'Inversionista'},
+  {name:'Miguel Ángel Gonzalez',dob:'1991-10-17',type:'Inversionista'},
+  {name:'Mimoun Cadosch',dob:'1991-07-05',type:'Inversionista'},
+  {name:'Neto Vargas',dob:'1981-03-10',type:'Inversionista'},
+  {name:'Octavio Zavala',dob:'1994-04-07',type:'Inversionista'},
+  {name:'Oliver Brett',dob:'1990-11-14',type:'Inversionista'},
+  {name:'Pablo Valles',dob:'1996-08-05',type:'Empleado'},
+  {name:'Robegrill Group LLC',dob:'1968-07-10',type:'Inversionista'},
+  {name:'Santiago Alvarez Bringas',dob:'1998-10-07',type:'Empleado'},
+  {name:'Santiago Bernardo Tobon Salazar',dob:'1987-09-05',type:'Inversionista'},
+  {name:'Santiago Carranza',dob:'1992-05-19',type:'Empleado'},
+  {name:'Óscar Córdova',dob:'1988-05-04',type:'Empleado'},
+];
+
+function bdayDaysUntil(dob) {
+  const d = new Date(dob + 'T00:00:00');
+  const next = new Date(BDAY_TODAY.getFullYear(), d.getMonth(), d.getDate());
+  if (next < BDAY_TODAY) next.setFullYear(BDAY_TODAY.getFullYear() + 1);
+  return Math.round((next - BDAY_TODAY) / 864e5);
+}
+function bdayAge(dob) {
+  const d = new Date(dob + 'T00:00:00');
+  const n = new Date(BDAY_TODAY.getFullYear(), d.getMonth(), d.getDate());
+  return BDAY_TODAY.getFullYear() - d.getFullYear() - (BDAY_TODAY < n ? 1 : 0);
+}
+function bdayInitials(name) {
+  return name.split(' ').slice(0,2).map(x=>x[0]||'').join('').toUpperCase();
+}
+function bdayFmtDate(dob) {
+  const d = new Date(dob + 'T00:00:00');
+  return d.toLocaleDateString('en-US', {month:'long', day:'numeric'});
+}
+function filteredBdays() {
+  if (bdayFilter === 'all') return BDAYS;
+  return BDAYS.filter(b => b.type === bdayFilter);
+}
+
+function renderBdayUpcoming() {
+  const list = BDAYS
+    .map(b => ({...b, days: bdayDaysUntil(b.dob)}))
+    .filter(b => b.days <= 30)
+    .sort((a,b) => a.days - b.days);
+  const el = document.getElementById('bdayUpcomingList');
+  if (!el) return;
+  if (!list.length) {
+    el.innerHTML = '<div class="bday-empty">No birthdays in the next 30 days</div>';
+    return;
+  }
+  const MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  el.innerHTML = list.map(b => {
+    const ini = bdayInitials(b.name);
+    const avCls = b.type === 'Empleado' ? 'bday-av-emp' : 'bday-av-inv';
+    const d = new Date(b.dob + 'T00:00:00');
+    const fd = MN[d.getMonth()] + ' ' + d.getDate();
+    const isToday = b.days === 0;
+    const isSoon = b.days <= 3;
+    const rowCls = isToday ? 'today-row' : '';
+    const badgeCls = isToday ? 'bday-badge-today' : isSoon ? 'bday-badge-soon' : 'bday-badge-normal';
+    const badgeTxt = isToday ? '🎂 Today!' : b.days === 1 ? 'Tomorrow' : b.days + 'd';
+    const typeLbl = b.type === 'Empleado' ? 'Employee' : 'Investor';
+    return `<div class="bday-upcoming-item ${rowCls}">
+      <div class="bday-av ${avCls}">${ini}</div>
+      <div style="flex:1;min-width:0">
+        <div class="bday-name">${b.name}</div>
+        <div class="bday-date-lbl">${fd} · ${typeLbl}</div>
+      </div>
+      <div class="bday-days-badge ${badgeCls}">${badgeTxt}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderBdayCalendar() {
+  if (bdayCalView === 'month') renderBdayMonthView();
+  else renderBdayYearView();
+}
+
+function renderBdayMonthView() {
+  const MN_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const lbl = document.getElementById('bdayMonthLbl');
+  const grid = document.getElementById('bdayGrid');
+  if (!lbl || !grid) return;
+  lbl.textContent = MN_LONG[bdayCalM] + ' ' + bdayCalY;
+
+  const first = new Date(bdayCalY, bdayCalM, 1).getDay();
+  const dim   = new Date(bdayCalY, bdayCalM + 1, 0).getDate();
+  const prevDim = new Date(bdayCalY, bdayCalM, 0).getDate();
+  const todayStr = BDAY_TODAY.toISOString().slice(0,10);
+  const mm = String(bdayCalM + 1).padStart(2,'0');
+
+  const dayMap = {};
+  filteredBdays().forEach(b => {
+    const d = new Date(b.dob + 'T00:00:00');
+    if (d.getMonth() === bdayCalM) {
+      const day = d.getDate();
+      if (!dayMap[day]) dayMap[day] = [];
+      dayMap[day].push(b);
+    }
+  });
+
+  let html = '';
+  for (let i = 0; i < first; i++) {
+    html += `<div class="bday-cell other-month"><div class="bday-num">${prevDim - first + 1 + i}</div></div>`;
+  }
+  for (let d = 1; d <= dim; d++) {
+    const dd = String(d).padStart(2,'0');
+    const dateStr = `${bdayCalY}-${mm}-${dd}`;
+    const dow = new Date(dateStr + 'T00:00:00').getDay();
+    const isToday   = dateStr === todayStr;
+    const isHoliday = HOLIDAYS.has(dateStr);
+    const isWeekend = dow === 0 || dow === 6;
+    const bds = dayMap[d] || [];
+    const hasBday = bds.length > 0;
+    let cls = 'bday-cell';
+    if (isToday)   cls += ' today-cell';
+    if (isHoliday) cls += ' is-holiday';
+    if (isWeekend) cls += ' is-weekend';
+    if (hasBday)   cls += ' has-bday';
+    const dotsHtml = bds.map(b =>
+      `<div class="bday-dot ${b.type==='Empleado'?'bday-dot-emp':'bday-dot-inv'}" title="${b.name}"></div>`
+    ).join('');
+    const holidayName = isHoliday ? (HOLIDAY_NAMES[dateStr] || 'NYSE Holiday') : '';
+    const shortHol = holidayName.replace("'s Day","").replace(" Day","").replace("Independence","Indep.").replace("Thanksgiving","Thanks.");
+    html += `<div class="${cls}" ${hasBday?`onclick="showBdayPopover(event,${d})"`:''}}>
+      <div class="bday-num">${d}</div>
+      ${hasBday ? `<div class="bday-dots">${dotsHtml}</div>` : ''}
+      ${isHoliday ? `<div class="bday-holiday-lbl" title="${holidayName}">${shortHol}</div>` : ''}
+    </div>`;
+  }
+  const trailing = (7 - ((first + dim) % 7)) % 7;
+  for (let i = 1; i <= trailing; i++) {
+    html += `<div class="bday-cell other-month"><div class="bday-num">${i}</div></div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function renderBdayYearView() {
+  const lbl = document.getElementById('bdayYearLbl');
+  const grid = document.getElementById('bdayAnnualGrid');
+  if (!lbl || !grid) return;
+  lbl.textContent = bdayCalY;
+  const MN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const todayStr = BDAY_TODAY.toISOString().slice(0,10);
+
+  // build birthday date set for the year
+  const bdayDates = new Set();
+  filteredBdays().forEach(b => {
+    const d = new Date(b.dob + 'T00:00:00');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const dd = String(d.getDate()).padStart(2,'0');
+    bdayDates.add(`${bdayCalY}-${mm}-${dd}`);
+  });
+
+  let html = '';
+  for (let m = 0; m < 12; m++) {
+    const firstDay = new Date(bdayCalY, m, 1).getDay();
+    const daysInMonth = new Date(bdayCalY, m + 1, 0).getDate();
+    const mm = String(m + 1).padStart(2,'0');
+    let mHtml = `<div class="mini-cal"><div class="mini-cal-title">${MN[m]}</div><div class="mini-cal-grid">`;
+    mHtml += 'SMTWTFS'.split('').map(c=>`<div class="mini-dow">${c}</div>`).join('');
+    for (let i = 0; i < firstDay; i++) mHtml += `<div class="mini-day other-month"></div>`;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dd2 = String(d).padStart(2,'0');
+      const dateStr = `${bdayCalY}-${mm}-${dd2}`;
+      const dow = new Date(dateStr + 'T00:00:00').getDay();
+      const isToday   = dateStr === todayStr;
+      const isHoliday = HOLIDAYS.has(dateStr);
+      const isWeekend = dow === 0 || dow === 6;
+      const hasBday   = bdayDates.has(dateStr);
+      let cls = 'mini-day';
+      if (isToday)        cls += ' today';
+      else if (isHoliday) cls += ' holiday';
+      else if (isWeekend) cls += ' weekend';
+      if (hasBday && !isToday) cls += ' has-bday-dot';
+      const tip = isHoliday ? ` title="${HOLIDAY_NAMES[dateStr]||'NYSE Holiday'}"` : '';
+      mHtml += `<div class="${cls}"${tip}>${d}</div>`;
+    }
+    const trailing = (7 - ((firstDay + daysInMonth) % 7)) % 7;
+    for (let i = 0; i < trailing; i++) mHtml += `<div class="mini-day other-month"></div>`;
+    mHtml += `</div></div>`;
+    html += mHtml;
+  }
+  grid.innerHTML = html;
+}
+
+function showBdayPopover(e, day) {
+  const pop = document.getElementById('bdayPopover');
+  const bds = filteredBdays().filter(b => {
+    const d = new Date(b.dob + 'T00:00:00');
+    return d.getMonth() === bdayCalM && d.getDate() === day;
+  });
+  if (!bds.length) { pop.classList.remove('open'); return; }
+  const MN_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  pop.innerHTML = `<div class="bday-pop-date">${MN_SHORT[bdayCalM]} ${day}, ${bdayCalY}</div>` +
+    bds.map(b => `<div class="bday-pop-item">
+      <div class="bday-av ${b.type==='Empleado'?'bday-av-emp':'bday-av-inv'}" style="width:26px;height:26px;font-size:10px">${bdayInitials(b.name)}</div>
+      <div><div class="bday-pop-name">${b.name}</div><div class="bday-pop-type">${b.type==='Empleado'?'Employee':'Investor'} · turns ${bdayAge(b.dob)}</div></div>
+    </div>`).join('');
+  const rect = e.currentTarget.getBoundingClientRect();
+  pop.style.left = Math.min(rect.left + rect.width / 2, window.innerWidth - 260) + 'px';
+  pop.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+  pop.classList.add('open');
+  e.stopPropagation();
+}
+
+function renderBdayTable() {
+  if (bdayTblView === 'birthdays') renderBdayBirthdays();
+  else renderBdayHolidays();
+}
+
+function renderBdayBirthdays() {
+  const q = (document.getElementById('bdaySearch')?.value || '').toLowerCase();
+  let rows = filteredBdays()
+    .map(b => ({...b, days: bdayDaysUntil(b.dob), age: bdayAge(b.dob)}))
+    .filter(b => !q || b.name.toLowerCase().includes(q))
+    .sort((a,b) => a.days - b.days);
+
+  const total = rows.length;
+  const totalPages = Math.ceil(total / BDAY_PAGE_SIZE) || 1;
+  if (bdayPage >= totalPages) bdayPage = 0;
+  const slice = rows.slice(bdayPage * BDAY_PAGE_SIZE, (bdayPage + 1) * BDAY_PAGE_SIZE);
+
+  const countEl = document.getElementById('bdayTblCount');
+  if (countEl) countEl.textContent = total + ' people';
+  renderBdayPagination(total, totalPages);
+
+  const bodyEl = document.getElementById('bdayTblBody');
+  if (!bodyEl) return;
+  bodyEl.innerHTML = slice.map(b => {
+    const fd = bdayFmtDate(b.dob);
+    const isToday = b.days === 0;
+    const isSoon  = b.days <= 7;
+    let badgeBg, badgeColor;
+    if (isToday)     { badgeBg='var(--vlate-bg)'; badgeColor='var(--vlate)'; }
+    else if (isSoon) { badgeBg='var(--late-bg)'; badgeColor='var(--late)'; }
+    else             { badgeBg='var(--s2)'; badgeColor='var(--tx3)'; }
+    const badgeTxt = isToday ? '🎂 Today!' : b.days + ' days';
+    const typeBadge = b.type === 'Empleado'
+      ? `<span style="display:inline-flex;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;background:var(--late-bg);color:var(--late)">Employee</span>`
+      : `<span style="display:inline-flex;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;background:#dbeafe;color:#1d4ed8">Investor</span>`;
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="bday-av ${b.type==='Empleado'?'bday-av-emp':'bday-av-inv'}" style="width:26px;height:26px;font-size:9px;flex-shrink:0">${bdayInitials(b.name)}</div>
+          <span style="font-weight:500">${b.name}</span>
+        </div>
+      </td>
+      <td>${typeBadge}</td>
+      <td style="color:var(--tx2)">${fd}</td>
+      <td style="color:var(--tx3)">${b.age} yrs</td>
+      <td><span style="display:inline-flex;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;background:${badgeBg};color:${badgeColor}">${badgeTxt}</span></td>
+      <td><button class="bday-rm-btn" onclick="removeBday('${b.name.replace(/'/g,"\\'")}')">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderBdayHolidays() {
+  const todayStr = BDAY_TODAY.toISOString().slice(0,10);
+  const dates = [...HOLIDAYS].sort();
+  const total = dates.length;
+  const totalPages = Math.ceil(total / BDAY_PAGE_SIZE) || 1;
+  if (bdayPage >= totalPages) bdayPage = 0;
+  const slice = dates.slice(bdayPage * BDAY_PAGE_SIZE, (bdayPage + 1) * BDAY_PAGE_SIZE);
+
+  const countEl = document.getElementById('bdayTblCount');
+  if (countEl) countEl.textContent = total + ' holidays';
+  renderBdayPagination(total, totalPages);
+
+  const bodyEl = document.getElementById('bdayHolBody');
+  if (!bodyEl) return;
+  const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  bodyEl.innerHTML = slice.map(d => {
+    const dow = new Date(d + 'T00:00:00').getDay();
+    const name = HOLIDAY_NAMES[d] || 'NYSE Holiday';
+    const fmt = new Date(d + 'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    let pill;
+    if (d < todayStr)      pill = `<span style="display:inline-flex;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;background:var(--s2);color:var(--tx3)">Past</span>`;
+    else if (d === todayStr) pill = `<span style="display:inline-flex;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;background:var(--late-bg);color:var(--late)">Today</span>`;
+    else                   pill = `<span style="display:inline-flex;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;background:var(--ontime-bg);color:var(--ontime)">Upcoming</span>`;
+    return `<tr>
+      <td style="color:var(--tx2)">${fmt}</td>
+      <td style="color:var(--tx3)">${DAY_NAMES[dow]}</td>
+      <td style="font-weight:500">${name}</td>
+      <td>${pill}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderBdayPagination(total, totalPages) {
+  const info = document.getElementById('bdayPageInfo');
+  const prev = document.getElementById('bdayPrevBtn');
+  const next = document.getElementById('bdayNextBtn');
+  if (!info) return;
+  const from = total ? bdayPage * BDAY_PAGE_SIZE + 1 : 0;
+  const to   = Math.min((bdayPage + 1) * BDAY_PAGE_SIZE, total);
+  info.textContent = total ? `${from}–${to} of ${total}` : '0';
+  if (prev) prev.disabled = bdayPage === 0;
+  if (next) next.disabled = bdayPage >= totalPages - 1;
+}
+
+function setCalView(view) {
+  bdayCalView = view;
+  document.getElementById('vtoggleMonth').classList.toggle('active', view === 'month');
+  document.getElementById('vtoggleYear').classList.toggle('active', view === 'year');
+  document.getElementById('bdayMonthView').style.display   = view === 'month' ? '' : 'none';
+  document.getElementById('bdayYearView').style.display    = view === 'year'  ? '' : 'none';
+  document.getElementById('bdayMonthNavWrap').style.display = view === 'month' ? '' : 'none';
+  document.getElementById('bdayYearNavWrap').style.display  = view === 'year'  ? '' : 'none';
+  document.getElementById('bdayFilterWrap').style.display   = view === 'month' ? '' : 'none';
+  renderBdayCalendar();
+}
+
+function setTblView(view, el) {
+  bdayTblView = view;
+  bdayPage = 0;
+  document.querySelectorAll('.bday-tbl-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const bdayTbl = document.getElementById('bdayBdayTable');
+  const holTbl  = document.getElementById('bdayHolidayTable');
+  const searchEl = document.getElementById('bdaySearch');
+  const addBtn   = document.getElementById('bdayAddBtn');
+  if (bdayTbl)  bdayTbl.style.display  = view === 'birthdays' ? '' : 'none';
+  if (holTbl)   holTbl.style.display   = view === 'holidays'  ? '' : 'none';
+  if (searchEl) searchEl.style.display = view === 'birthdays' ? '' : 'none';
+  if (addBtn)   addBtn.style.display   = view === 'birthdays' ? '' : 'none';
+  renderBdayTable();
+}
+
+function onBdaySearch() { bdayPage = 0; renderBdayBirthdays(); }
+
+function bdayPagePrev() { if (bdayPage > 0) { bdayPage--; renderBdayTable(); } }
+function bdayPageNext() {
+  const total = bdayTblView === 'birthdays' ? filteredBdays().length : [...HOLIDAYS].length;
+  if ((bdayPage + 1) * BDAY_PAGE_SIZE < total) { bdayPage++; renderBdayTable(); }
+}
+
+function changeBdayYear(dir) {
+  bdayCalY += dir;
+  renderBdayYearView();
+}
+
+function changeBdayMonth(dir) {
+  bdayCalM += dir;
+  if (bdayCalM > 11) { bdayCalM = 0; bdayCalY++; }
+  if (bdayCalM < 0)  { bdayCalM = 11; bdayCalY--; }
+  renderBdayMonthView();
+}
+
+function setBdayFilter(f, el) {
+  bdayFilter = f;
+  document.querySelectorAll('.bday-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderBdayCalendar();
+  renderBdayUpcoming();
+  renderBdayTable();
+}
+
+function addBday() {
+  const name = document.getElementById('bdayName').value.trim();
+  const dob  = document.getElementById('bdayDOB').value;
+  const type = document.getElementById('bdayType').value;
+  if (!name || !dob) return;
+  BDAYS.push({name, dob, type});
+  document.getElementById('bdayAddModal').classList.remove('open');
+  ['bdayName','bdayDOB','bdayEmail'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  renderBdayAll();
+}
+
+function removeBday(name) {
+  if (!confirm('Remove ' + name + '?')) return;
+  BDAYS = BDAYS.filter(b => b.name !== name);
+  renderBdayAll();
+}
+
+function renderBdayAll() {
+  renderBdayUpcoming();
+  renderBdayCalendar();
+  renderBdayTable();
+}
+
+// Close birthday popover on outside click
+document.addEventListener('click', e => {
+  const pop = document.getElementById('bdayPopover');
+  if (pop && !pop.contains(e.target)) pop.classList.remove('open');
+});
+const bdayModal = document.getElementById('bdayAddModal');
+if (bdayModal) bdayModal.addEventListener('click', e => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
 
 // ── THEME ─────────────────────────────────────────────────
 function toggleTheme() {
